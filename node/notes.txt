@@ -1,0 +1,330 @@
+Node js is a javascript run time built on chrome's v8 js engine. It allows you to run js on the server side, outside of the browser. It is not a language or a framework.
+
+Key features:
+1. JavaScript everywhere - Same language for frontend and backend
+2. Non-blocking I/O - Handles many connections simultaneously
+3. Event-driven - Uses events and callbacks
+Single-threaded - Uses one thread with event loop
+4. Fast - Built on V8 engine (compiles JS to machine code)
+
+✅ Single language - JavaScript for both frontend and backend 
+✅ Fast - Non-blocking I/O, event-driven 
+✅ Scalable - Handles many concurrent connections 
+✅ Large ecosystem - NPM has millions of packages 
+✅ Real-time - Great for chat apps, live updates, streaming 
+✅ Microservices - Perfect for building APIs
+
+When to use Node.js:
+
+✅ Good for:
+
+- REST APIs
+- Real-time applications (chat, notifications)
+- Microservices
+- Streaming applications
+- Single-page applications (SPAs)
+- I/O intensive operations
+
+❌ Not ideal for:
+
+- CPU-intensive tasks (video encoding, complex calculations)
+- Heavy computation (use Python, Java, C++)
+
+Basic node server:
+
+const http = require('https')
+
+const server = http.createServer((req, res) => {
+    res.writeHead(200, {'Content-Type': 'text/plain'})
+    res.end("Hello from node.js")
+})
+
+server.listen(3000, () => {
+    console.log('Server running on port 3000')
+})
+
+Express:
+Express.js is a minimal and flexible Node.js web application framework. It simplifies building web servers and APIs
+
+node:
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+    if (req.url === '/' && req.method === 'GET') {
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
+        res.end('Home Page');
+    } else if (req.url === '/about' && req.method === 'GET') {
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
+        res.end('About Page');
+    } else {
+        res.writeHead(404);
+        res.end('Not Found');
+    }
+});
+
+server.listen(3000);
+
+Express:
+const express = require('express');
+const app = express();
+
+app.get('/', (req, res) => {
+  res.send('Home Page');
+});
+
+app.get('/about', (req, res) => {
+  res.send('About Page');
+});
+
+app.listen(3000);
+
+Express is a Node.js framework that simplifies web server and API development. It provides routing, middleware, and utilities that make code cleaner and faster to write than raw Node.js.
+
+Key features:
+- Routing - Easy URL handling
+- Middleware - Request/response processing
+- Template engines - Dynamic HTML rendering
+- Static files - Serve CSS, images, etc.
+- Error handling - Centralized error management
+- HTTP utilities - Simplified request/response
+
+Middleware:
+Middleware functions are functions that have access to the request object(req), response object(res), and the next middleware function in the application's request-response cycle.
+
+It can:
+1. Execute any code
+2. Make changes to req and res objects
+3. End the request-response cycle
+4. Call the next middleware in the stack
+
+Request → Middleware 1 → Middleware 2 → Route Handler → Response
+
+Basic middleware:
+
+const express = require('express')
+const app = express()
+
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`)
+    next() //pass control to next middleware
+})
+
+app.get('/', (req, res) => {
+    res.send('Home Page')
+})
+
+Types of middleware:
+1. Application-level middleware:
+
+// Runs for all routes
+app.use((req, res, next) => {
+  console.log('Time:', Date.now());
+  next();
+});
+
+// Runs for specific path
+app.use('/api', (req, res, next) => {
+  console.log('API request');
+  next();
+});
+
+2. Router-level middleware
+
+const router = express.Router();
+
+router.use((req, res, next) => {
+  console.log('Router middleware');
+  next();
+});
+
+router.get('/users', (req, res) => {
+  res.send('Users');
+});
+
+app.use('/api', router);
+
+3. Built-in middleware
+
+// Parse JSON bodies
+app.use(express.json());
+
+// Parse URL-encoded bodies
+app.use(express.urlencoded({ extended: true }));
+
+// Serve static files
+app.use(express.static('public'));
+
+4. Third-party middleware:
+
+const cors = require('cors');
+const morgan = require('morgan');
+
+app.use(cors()); // Enable CORS
+app.use(morgan('dev')); // Logging
+
+5. Error-handling middleware:
+
+// Has 4 parameters (err, req, res, next)
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
+Middleware functions execute in sequence between request and response. They can modify req/res, end response, or call next(). Must call next() to pass control to next middleware. Used for logging, authentication, parsing, error handling, etc. Order matters - define middleware before routes.
+
+Built-in middleware:
+Express provides several built-in middleware functions for common tasks.
+1. express.json()
+2. express.urlencoded()
+3. express.static()
+
+Custom middleware:
+Custom middleware are functions you create for specific application needs.
+logger middleware
+middleware factory function
+request validation
+rate limiting
+async middleware
+
+Error-handling middleware:
+Error handling middleware catches errors in your application and sends appropriate responses to clients.
+Error middleware has 4 parameters (err, req, res, next). Place it after all routes. Use custom error classes for better error handling. Wrap async functions to catch errors and pass to error middleware with next(err).
+
+Status Codes:
+HTTP status codes indicate the result of a client's request. They're grouped into five classes
+
+1xx - informational
+2xx - success
+3xx - redirection
+4xx - client errors
+5xx - server errors
+
+SUCCESS (2xx) : 
+// 200 OK - Request succeeded
+app.get('/users', (req, res) => {
+  res.status(200).json(users);
+  // or just: res.json(users)  // 200 is default
+});
+
+// 201 Created - Resource created
+app.post('/users', (req, res) => {
+  const newUser = createUser(req.body);
+  res.status(201).json(newUser);
+});
+
+// 204 No Content - Success but no data to return
+app.delete('/users/:id', (req, res) => {
+  deleteUser(req.params.id);
+  res.status(204).send();
+});
+
+Client errors (4xx):
+// 400 Bad Request - Invalid request data
+app.post('/users', (req, res) => {
+  if (!req.body.email) {
+    return res.status(400).json({ 
+      error: 'Email is required' 
+    });
+  }
+});
+
+// 401 Unauthorized - Not authenticated
+app.get('/profile', (req, res) => {
+  if (!req.headers.authorization) {
+    return res.status(401).json({ 
+      error: 'Authentication required' 
+    });
+  }
+});
+
+// 403 Forbidden - Authenticated but not authorized
+app.delete('/users/:id', (req, res) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ 
+      error: 'Insufficient permissions' 
+    });
+  }
+});
+
+// 404 Not Found - Resource doesn't exist
+app.get('/users/:id', (req, res) => {
+  const user = findUser(req.params.id);
+  
+  if (!user) {
+    return res.status(404).json({ 
+      error: 'User not found' 
+    });
+  }
+  
+  res.json(user);
+});
+
+// 409 Conflict - Request conflicts with server state
+app.post('/users', (req, res) => {
+  const exists = checkUserExists(req.body.email);
+  
+  if (exists) {
+    return res.status(409).json({ 
+      error: 'User already exists' 
+    });
+  }
+});
+
+Server errors (5xx):
+// 500 Internal Server Error - Unexpected server error
+app.get('/users', (req, res) => {
+  try {
+    const users = getAllUsers();
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ 
+      error: 'Internal server error' 
+    });
+  }
+});
+
+// 503 Service Unavailable - Server temporarily unavailable
+app.get('/users', (req, res) => {
+  if (!database.isConnected()) {
+    return res.status(503).json({ 
+      error: 'Service temporarily unavailable' 
+    });
+  }
+});
+
+Authentication:
+// 1. Authentication - Login
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
+  
+  // Find user
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(401).json({ error: 'Invalid credentials' });
+  }
+  
+  // Verify password
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    return res.status(401).json({ error: 'Invalid credentials' });
+  }
+  
+  // User authenticated - generate token
+  const token = jwt.sign({ userId: user._id }, 'secret');
+  res.json({ token });
+});
+
+// 2. Authorization - Check if admin
+const requireAdmin = (req, res, next) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Not authorized' });
+  }
+  next();
+};
+
+// Protected route - requires both
+app.delete('/api/users/:id', authenticate, requireAdmin, async (req, res) => {
+  // Only authenticated admins can delete users
+  await User.findByIdAndDelete(req.params.id);
+  res.status(204).send();
+});
