@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const OrdersContext = createContext();
 
 export const OrdersProvider = ({ children }) => {
@@ -14,10 +15,10 @@ export const OrdersProvider = ({ children }) => {
         fetchOrderPics();
     }, []);
     console.log(orders);
-    
+
     return (
         <OrdersContext.Provider value={{ orders }}>
-        {children}
+            {children}
         </OrdersContext.Provider>
     );
 };

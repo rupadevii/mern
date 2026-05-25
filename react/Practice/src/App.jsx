@@ -5,6 +5,14 @@ import Ref from "./Ref";
 import Ref2 from "./Ref2";
 import State from "./State";
 import { ThemeContext } from "./ThemeContext";
+import { Route, Routes } from "react-router-dom";
+import { HomeProvider } from "./contexts/HomeContext";
+import Home from "./contextConsumers/Home";
+import { OrdersProvider } from "./contexts/OrdersContext";
+import Orders from "./contextConsumers/Orders";
+import { ProductsProvider } from "./contexts/ProductsContext";
+import Products from "./contextConsumers/Products";
+import SignUp from "./SignUp";
 
 export default function App() {
     const {theme, setTheme} = useContext(ThemeContext)
@@ -20,6 +28,34 @@ export default function App() {
             <Ref2/>
             <Effect/>
             <Memo/>
+
+            <Routes>
+                <Route path="/" element={<SignUp />} />
+                <Route
+                    path="/home"
+                    element={
+                    <HomeProvider>
+                        <Home />
+                    </HomeProvider>
+                    }
+                />
+                <Route
+                    path="/orders"
+                    element={
+                    <OrdersProvider>
+                        <Orders />
+                    </OrdersProvider>
+                    }
+                />
+                <Route
+                    path="/products"
+                    element={
+                    <ProductsProvider>
+                        <Products />
+                    </ProductsProvider>
+                    }
+                />
+            </Routes>
         </div>
     )
 }
