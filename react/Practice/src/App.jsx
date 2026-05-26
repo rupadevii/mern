@@ -6,11 +6,11 @@ import Ref2 from "./Ref2";
 import State from "./State";
 import { ThemeContext } from "./ThemeContext";
 import { Route, Routes } from "react-router-dom";
-import { HomeProvider } from "./contexts/HomeContext";
+import { HomeProvider } from "./context/HomeContext";
 import Home from "./contextConsumers/Home";
-import { OrdersProvider } from "./contexts/OrdersContext";
+import { OrdersProvider } from "./context/OrdersContext";
 import Orders from "./contextConsumers/Orders";
-import { ProductsProvider } from "./contexts/ProductsContext";
+import { ProductsProvider } from "./context/ProductsContext";
 import Products from "./contextConsumers/Products";
 import SignUp from "./SignUp";
 

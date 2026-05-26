@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { HomeContext } from "../contexts/HomeContext";
+import { HomeContext } from "../context/HomeContext";
 import { useContext } from "react";
 
 export default function Home() {

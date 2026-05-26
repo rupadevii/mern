@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useContext } from "react";
-import { ProductsContext } from "../contexts/ProductsContext";
+import { ProductsContext } from "../context/ProductsContext";
 
 export default function Products() {
     const { products } = useContext(ProductsContext);
