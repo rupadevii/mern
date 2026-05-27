@@ -13,6 +13,9 @@ import Orders from "./contextConsumers/Orders";
 import { ProductsProvider } from "./context/ProductsContext";
 import Products from "./contextConsumers/Products";
 import SignUp from "./SignUp";
+import Debounce from "./debounce/Debounce";
+import Throttle from "./Throttle";
+import SearchComponent from "./debounce/SearchComponent";
 
 export default function App() {
     const {theme, setTheme} = useContext(ThemeContext)
@@ -28,6 +31,9 @@ export default function App() {
             <Ref2/>
             <Effect/>
             <Memo/>
+            <Debounce/>
+            <Throttle/>
+            <SearchComponent/>
 
             <Routes>
                 <Route path="/" element={<SignUp />} />
