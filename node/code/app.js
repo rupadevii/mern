@@ -3,6 +3,8 @@ import userRoutes from './routes/users.route.js'
 import authRoutes from './routes/auth.route.js'
 import dotenv from "dotenv"
 import { connectDB } from "./config/mongoose.config.js";
+import { authMiddleware } from "./middleware/auth.middleware.js";
+import cookieParser from "cookie-parser"
 
 const app = express()
 dotenv.config({
@@ -10,12 +12,15 @@ dotenv.config({
 })
 
 connectDB()
+
+app.use(cookieParser())
 app.use(express.json())
 
-app.use('/users', userRoutes)
+app.use('/users', authMiddleware, userRoutes)
+// app.use('/users', userRoutes)
 app.use('/auth', authRoutes)
 
-const PORT = 8000
+const PORT = process.env.PORT
 
 app.listen(PORT, (req, res) => {
     console.log("Server is running on PORT 8000")

@@ -293,6 +293,8 @@ app.get('/users', (req, res) => {
 });
 
 Authentication:
+
+Use bcrypt.hash to hash password while signing up and bcrypt.compare to compare while logging in.
 // 1. Authentication - Login
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
