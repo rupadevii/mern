@@ -1,0 +1,78 @@
+Node concurrency:
+
+Node.js is single-threaded, meaning it has one call stack and executes one piece of JavaScript at a time. But it achieves high concurrency through non-blocking I/O and the event loop, powered by the libuv library.
+
+The key idea: Instead of waiting for I/O (disk reads, network requests, DB queries), Node.js delegates those tasks to the OS or a thread pool, then continues executing other code. When the I/O finishes, a callback is placed in the event queue and executed when the call stack is free.
+
+  ┌──────────────────────────┐
+  │       JavaScript         │   ← Single thread (V8 engine)
+  │      (Call Stack)        │
+  └────────────┬─────────────┘
+               │  delegates I/O
+  ┌────────────▼─────────────┐
+  │         libuv            │   ← Handles async I/O, thread pool
+  │  (Event Loop + OS I/O)   │
+  └────────────┬─────────────┘
+               │ callback when done
+  ┌────────────▼─────────────┐
+  │       Event Queue        │   ← Callbacks waiting to run
+  └──────────────────────────┘
+
+Simple explanation:
+
+Synchronous code executes immediately
+Asynchronous operations (file read, DB query) are sent to worker threads
+Event loop waits for operations to complete
+Callbacks execute when operations finish
+
+Example:
+const fs = require('fs');
+
+console.log('Start');
+
+// Async operation - goes to worker thread
+fs.readFile('file.txt', 'utf8', (err, data) => {
+  console.log('File read complete');
+});
+
+console.log('End');
+
+// Output:
+// Start
+// End
+// File read complete
+
+Traditional server (multi-threaded):
+Request 1 → Thread 1 → Response
+Request 2 → Thread 2 → Response
+Request 3 → Thread 3 → Response
+(Each request needs a new thread)
+
+Node.js (single-threaded + event loop):
+Request 1 ─┐
+Request 2 ─┼→ Single Thread + Event Loop → Responses
+Request 3 ─┘
+(One thread handles all requests)
+
+nodejs uses libuv library to handle event loop, thread pool, async I/O and timers
+
+The event loop is the scheduler that makes this work. It's a continuous loop implemented in libuv (Node's C-level async I/O library) that moves through 6 phases in strict order:
+Phase 1 — Timers: Runs setTimeout and setInterval callbacks whose delay has expired. The delay is a minimum, not a guarantee — the actual firing depends on when the loop gets back here.
+Phase 2 — Pending callbacks: Handles deferred I/O errors from the previous tick (e.g., TCP connection refused).
+Phase 3 — Idle/Prepare: Internal libuv housekeeping. Not accessible to user code.
+Phase 4 — Poll: The most important phase. This is where new I/O events are fetched and their callbacks executed. If no callbacks are pending and no timers are due, the loop blocks here, sleeping until the OS delivers an event — this is how Node avoids burning CPU at 100% while idle.
+Phase 5 — Check: setImmediate callbacks fire here, always after the poll phase and always before the next timer tick. Use this when you want "run after the current I/O is done."
+Phase 6 — Close callbacks: Handles cleanup for abruptly closed handles (socket.on('close', ...)).
+
+Microtasks run between every phase
+Between each phase transition, Node completely drains the microtask queue before moving on. This queue holds:
+
+process.nextTick() callbacks (highest priority — drained first within microtasks)
+Resolved Promise callbacks
+
+Microtasks vs macrotasks:
+               Microtasks	                                Macrotasks
+Examples	   Promise.then, async/await, process.nextTick	setTimeout, setInterval, setImmediate, I/O callbacks
+Queue	       Microtask queue	                            Macrotask queue (event loop phases)
+Priority	   Higher — runs before next event loop phase	Lower — runs in its designated phase
+Execution	   After every task, before the next phase	    Once per event loop phase

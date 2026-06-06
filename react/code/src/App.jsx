@@ -16,6 +16,7 @@ import SignUp from "./SignUp";
 import Debounce from "./debounce/Debounce";
 import Throttle from "./Throttle";
 import SearchComponent from "./debounce/SearchComponent";
+import Suggested from "./ques/Suggested";
 
 export default function App() {
     const {theme, setTheme} = useContext(ThemeContext)
@@ -26,6 +27,7 @@ export default function App() {
                 {theme}
                 <button onClick={() => setTheme(prev => prev==="light"? "dark": "light")}>Change Theme</button>
             </div>
+            <Suggested/>
             <State/>
             <Ref/>
             <Ref2/>

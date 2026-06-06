@@ -330,3 +330,87 @@ app.delete('/api/users/:id', authenticate, requireAdmin, async (req, res) => {
   await User.findByIdAndDelete(req.params.id);
   res.status(204).send();
 });
+
+--> Storing Tokens:
+
+You should store sensitive authentication tokens (like JWT access or refresh tokens) in httpOnly cookies rather than localStorage because client-side JavaScript cannot read httpOnly cookies, which completely isolates your tokens from Cross-Site Scripting (XSS) attacks.
+
+                  httpOnly Cookies           localStorage
+XSS attacks         safe                      vulnerable
+CSRF                vulnerable                safe
+Auto sent           Yes                       No
+Javascript access   No                        Yes
+Auto sent           Yes                       No (must be sent manually using headers)
+
+
+--> Connecting Database:
+
+require('dotenv').config();
+const mongoose = require('mongoose');
+
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGODB_URI);
+        console.log('MongoDB connected successfully');
+    } catch (error) {
+        console.error('MongoDB connection error:', error);
+        process.exit(1);
+    }
+};
+
+connectDB();
+
+
+--> STREAMS in node:
+
+Streams are objects that let you read or write data piece by piece (chunks), rather than loading everything into memory at once. Ideal for large files, video, real-time data.
+
+4 types of streams:
+
+Type
+Readable  -  Read only  -  fs.createReadStream()
+Writable  -  Write only  -  fs.createWriteStream()
+Duplex    -  Read + write  -  TCP socket, net.Socket
+Transform -  Read + write + modify  -  zlib.createGzip(), encryption
+
+Streams should be used whenever you handle data that is too large for the computer's memory or when data arrives in pieces over time.
+
+Readable: Streams from which data can be read sequentially
+
+// ❌ BAD — loads entire file into memory
+const data = fs.readFileSync('./bigfile.mp4'); // uses GBs of RAM
+res.end(data);
+
+// ✅ GOOD — streams chunks, minimal memory usage
+const readStream = fs.createReadStream('./bigfile.mp4');
+readStream.pipe(res); // pipes directly to HTTP response
+
+
+Writable: Streams to which data can be written sequentially.
+
+const fs = require('fs');
+const writableStream = fs.createWriteStream('output.txt');
+writableStream.write('Hello, World!\n');
+writableStream.end();
+
+
+Duplex Streams: Streams that act as both readable and writable. They are bidirectional and allow you to both read and write data simultaneously
+
+
+Transform streams: A specialized type of Duplex stream where the output is computed based on the input. The data is modified (transformed) as it is being written or read.
+
+const { createReadStream, createWriteStream } = require('fs');
+const { createGzip } = require('zlib');
+
+createReadStream('input.txt')
+  .pipe(createGzip())         // Transform: compress
+  .pipe(createWriteStream('output.txt.gz')); // Writable: write to disk
+
+
+Key scenerios for using streams:
+- Processing large files
+- Network operations 
+- Improving app speed
+- Data manipulation
+- Optimizing memory
+

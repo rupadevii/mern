@@ -17,7 +17,6 @@ export default function Throttle() {
             console.log("scrolling...")
         }, 1000)
 
-
         window.addEventListener("scroll", throttledValue)
 
         return () => window.removeEventListener("scroll", throttledValue)
@@ -25,6 +24,7 @@ export default function Throttle() {
     
     return (
         <div style={{height: "1500vh"}}>
+            <h1 title="throttle">Throttle</h1>
             Throttle example
         </div>
     )
