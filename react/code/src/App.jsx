@@ -17,6 +17,12 @@ import Debounce from "./debounce/Debounce";
 import Throttle from "./Throttle";
 import SearchComponent from "./debounce/SearchComponent";
 import Suggested from "./ques/Suggested";
+import Accordion from "./ques/Accordion";
+import Carousel from "./ques/Carousel";
+import SortableList from "./ques/SortableList";
+import UndoRedo from "./ques/UndoRedo";
+import Todo from "./ques/Todo";
+import Tabs from "./ques/Tabs";
 
 export default function App() {
     const {theme, setTheme} = useContext(ThemeContext)
@@ -27,15 +33,21 @@ export default function App() {
                 {theme}
                 <button onClick={() => setTheme(prev => prev==="light"? "dark": "light")}>Change Theme</button>
             </div>
+            <Accordion/>
             <Suggested/>
             <State/>
             <Ref/>
             <Ref2/>
             <Effect/>
             <Memo/>
+            <SearchComponent/>
+            <Carousel/>
+            <SortableList/>
+            <UndoRedo/>
+            <Todo/>
+            <Tabs/>
             <Debounce/>
             <Throttle/>
-            <SearchComponent/>
 
             <Routes>
                 <Route path="/" element={<SignUp />} />
