@@ -23,6 +23,12 @@ import SortableList from "./ques/SortableList";
 import UndoRedo from "./ques/UndoRedo";
 import Todo from "./ques/Todo";
 import Tabs from "./ques/Tabs";
+import KanbanBoard from "./ques/KanbanBoard";
+// import MultiSelectDropdown from "./ques/MultiSelectDropDown";
+// import SearchableDropDown from "./ques/SearchableDropDown";
+import AutoSaveForm from "./ques/AutoSaveForm";
+import Dashboard from "./lazy-loading/Dashboard";
+import ExpenseTracker from "./ques/ExpenseTracker";
 
 export default function App() {
     const {theme, setTheme} = useContext(ThemeContext)
@@ -33,6 +39,10 @@ export default function App() {
                 {theme}
                 <button onClick={() => setTheme(prev => prev==="light"? "dark": "light")}>Change Theme</button>
             </div>
+            {/* <MultiSelectDropdown/>
+            <SearchableDropDown/> */}
+            {/* <KanbanBoard/>
+            <AutoSaveForm/>
             <Accordion/>
             <Suggested/>
             <State/>
@@ -48,6 +58,8 @@ export default function App() {
             <Tabs/>
             <Debounce/>
             <Throttle/>
+            <Dashboard/> */}
+            {/* <ExpenseTracker/> */}
 
             <Routes>
                 <Route path="/" element={<SignUp />} />
