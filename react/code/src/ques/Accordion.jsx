@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import './Accordion.css'
 
 export default function Accordion() {
     const items = Array(10).fill().map((item, index) => (

@@ -42,7 +42,7 @@ export const deleteUser = (req, res) => {
         return res.status(404).json({msg: "User not found."})
     }
 
-    users = users.filter(user => user.id !== id)
+    users = users.filter(user => user.id !== Number(id))
 
     res.status(200).json({msg: "User deleted successfully."})
 }
