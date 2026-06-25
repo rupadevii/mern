@@ -1,6 +1,9 @@
 function App() {
     return (
-        <h1>Client side rendering in React</h1>
+        <div>
+            <h1>Server side rendering in React</h1>
+        </div>
+        
     )
 }
 
