@@ -88,12 +88,6 @@ export const getNewToken = async(req, res) => {
 
         const decoded = jwt.verify(token, process.env.JWT_REFRESH_KEY)
 
-        const user = await User.findById(decoded.id)
-
-        if(!user){
-            return res.status(400).json({msg: "Invalid token."})
-        }
-
         const accessToken = generateAccessToken({email: user.email, id: user._id})
 
         res.cookie("auth_token", accessToken, {

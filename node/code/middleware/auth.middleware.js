@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken"
-import User from "../models/user.model.js";
 
 export const authMiddleware = async(req, res, next) => {
     try{
@@ -12,14 +11,8 @@ export const authMiddleware = async(req, res, next) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_ACCESS_KEY)
-        
-        const user = await User.findById(decoded.id)
-
-        if(!user){
-            return res.status(400).json({msg: "Invalid token."})
-        }
-
-        req.user = user
+        // console.log(decoded)
+        req.user = decoded
 
         next()
     }catch(error){
@@ -27,7 +20,7 @@ export const authMiddleware = async(req, res, next) => {
         if(error.name === "TokenExpiredError"){
             return res.status(401).json({msg: "Token expired"})
         }
-        
+
         return res.status(500).json({msg: "Something went wrong"})
     }
 }
