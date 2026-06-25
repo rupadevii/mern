@@ -5,9 +5,13 @@ export const authMiddleware = async(req, res, next) => {
     try{
         // const token = req.headers.authorization.replace("Bearer ", "")
         const token = req.cookies.auth_token
-        console.log(token)
+        // console.log("access token", req)
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
+        if(!token){
+            return res.status(401).json({msg: "No token provided"})
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_ACCESS_KEY)
         
         const user = await User.findById(decoded.id)
 
@@ -20,5 +24,10 @@ export const authMiddleware = async(req, res, next) => {
         next()
     }catch(error){
         console.log(error)
+        if(error.name === "TokenExpiredError"){
+            return res.status(401).json({msg: "Token expired"})
+        }
+        
+        return res.status(500).json({msg: "Something went wrong"})
     }
 }

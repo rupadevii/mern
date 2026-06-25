@@ -9,6 +9,7 @@ import { ProductsProvider } from "./context/ProductsContext";
 import Products from "./contextConsumers/Products";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
+import Users from "./pages/Users";
 
 export default function App() {
     const {theme, setTheme} = useContext(ThemeContext)
@@ -23,6 +24,7 @@ export default function App() {
             <Routes>
                 <Route path="/" element={<SignUp />} />
                 <Route path="/login" element={<Login/>}/>
+                <Route path="/users" element={<Users/>}/>
                 
                 <Route
                     path="/home"

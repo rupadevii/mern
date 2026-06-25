@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { api } from '../utils/api';
 
 export default function Login() {
     const [formData, setFormData] = useState({
@@ -21,22 +22,13 @@ export default function Login() {
         }
 
         try{
-            const res = await fetch("http://localhost:8000/auth/login", 
-                {
-                    method: "POST", 
-                    headers: {
-                        "Content-type": "application/json",
-                    },
-                    body: JSON.stringify(formData)
-                })
-            const data = await res.json()
-
+            const data = await api.post('/auth/login', formData)
             console.log(data)
 
             setStatus("Logged in successfully")
 
             setTimeout(() => {
-                navigate('/home')
+                navigate('/users')
             }, 1000)
         }
         catch(error){

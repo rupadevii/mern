@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { api } from "../utils/api";
 
 export default function SignUp() {
     const [formData, setFormData] = useState({
@@ -19,19 +20,23 @@ export default function SignUp() {
         }
 
         try {
-            const res = await fetch("http://localhost:8000/auth/signup", 
-                {
-                    method: "POST", 
-                    headers: {
-                        "Content-type": "application/json",
-                    },
-                    body: JSON.stringify(formData)
-                })
-            const data = await res.json()
+            // const res = await fetch("http://localhost:8000/auth/signup", 
+            //     {
+            //         method: "POST", 
+            //         headers: {
+            //             "Content-type": "application/json",
+            //         },
+            //         body: JSON.stringify(formData)
+            //     })
+            // const data = await res.json()
+            const res = await api.post('/auth/signup', formData)
     
-            console.log(data)
+            console.log(res.data)
 
             setStatus("Account created successfully.")
+
+            setFormData({name: "", email: "", password: ""})
+
         } catch (error) {
             setStatus("Something went wrong.")
             console.log(error)
