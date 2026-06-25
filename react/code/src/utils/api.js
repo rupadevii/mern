@@ -12,7 +12,7 @@ api.interceptors.response.use((config) => {
 
     console.log("error status", error.status, error.response.data.msg)
 
-    if(request.url === "/refresh"){
+    if(request.url === "/auth/refresh"){
         return Promise.reject(error)
     }
 

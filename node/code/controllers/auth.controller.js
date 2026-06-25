@@ -88,7 +88,7 @@ export const getNewToken = async(req, res) => {
 
         const decoded = jwt.verify(token, process.env.JWT_REFRESH_KEY)
 
-        const accessToken = generateAccessToken({email: user.email, id: user._id})
+        const accessToken = generateAccessToken({email: decoded.email, id: decoded._id})
 
         res.cookie("auth_token", accessToken, {
             maxAge: 15*60*1000,
