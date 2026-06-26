@@ -12,11 +12,16 @@ const io = new Server(httpServer, {
     methods : ["GET","POST"]
 })
 
+const history = []
+
 io.on('connection', (socket) => {
     console.log(`${socket.id} connected successfully`)
 
+    socket.emit("send_history", history)
+
     socket.on('message', (data) => {
         console.log(socket.id, data)
+        history.push({name: data.name, message: data.message})
         io.emit('message',data)
     })
 
