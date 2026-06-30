@@ -1,6 +1,24 @@
 import Batch from "../models/batch.model.js";
 import Student from "../models/student.model.js";
 
+// {
+//     "name": "Prachi Nigam",
+//     "email": "prachinigam@gmail.com",
+//     "personalDetails": {
+//         "phoneNumber" : 9876543210,
+//         "dob" : "05-10-2004",
+//         "address" : "Greater Noida"
+//         },
+//         "course" : "Java full stack",
+//         "joined" : "July 2025",
+//         "mockStatus" : {
+//           "fullStackMockStatus": "cleared",
+//           "frontEndMockStatus": "cleared"
+//         },
+//         "batchId" : "6a42a9ed576c0fb23e8b40f4"
+  
+// }
+
 export const getStudents = async (req, res) => {
     try {
         const students = await Student.find({}).populate("batch", "name")
