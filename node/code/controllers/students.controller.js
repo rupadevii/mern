@@ -98,12 +98,26 @@ export const addStudent = (req, res) => {
         batch,
         joined,
         mockStatus: {
-            fullStack: fullStackMockStatus||false,
-            frontEnd: frontEndMockStatus||false
+            fullStack: fullStackMockStatus|| "unattempted",
+            frontEnd: frontEndMockStatus|| "unattempted"
         }
     }
 
     students.push(newStudent)
 
     res.status(201).json({msg: "Student added successfully"})
-}   
+}  
+
+export const deleteStudent = (req, res) => {
+    const {id} = req.params
+
+    const student = students.find(item => item.id===Number(id))
+
+    if(!student){
+        return res.status(404).json({msg: "Student not found."})
+    }
+
+    students = students.filter(item => item.id !== Number(id))
+
+    res.status(200).json({msg: "Student deleted successfully"})
+}
