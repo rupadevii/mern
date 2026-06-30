@@ -26,7 +26,6 @@ let orders = [
             subtotal: 5000,
             shippingCost: 55,
             discount: 50,
-            tax: 25,
             total: 4075
         },
         paymentStatus: 'pending',
